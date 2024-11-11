@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Development Plan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Syne', sans-serif;
+            background-color: #fff8f1;
+            color: #001246;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+        }
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 150px;
+        }
+        .form-page {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+        }
+        .form-page.active {
+            display: flex;
+        }
+        .question {
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        textarea, input {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 20px;
+            border: 2px solid #001246;
+            border-radius: 8px;
+            padding: 10px;
+            resize: none;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #001246;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #343a40;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 800px;
+        }
+        .navigation .next {
+            margin-left: auto;
+        }
+        .summary {
+            text-align: left;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+        h4 {
+            color: #FE4600;
+        }
+        
+        /* Fixed position box for the image */
+        .image-container {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 400px; /* Fixed width for the image */
+            background: url('computer.jpeg') no-repeat center center;
+            background-size: cover;
+            z-index: -1; /* Ensure the image stays behind the content */
+        }
+
+        /* Print-specific CSS to hide images */
+        @media print {
+            .image-container, .logo {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="https://images.ctfassets.net/7cqe14fu3dhm/01KpwhsR7v5YTBPf8adYpn/ac2d1be76d7716876d54248d9566ff4e/Solid_logo_submark_RGB_zwart__3_.png" alt="Logo" class="logo">
+    
+    <!-- Fixed image container on the right side -->
+    <div class="image-container"></div>
+
+    <!-- Page 1 -->
+    <div id="page1" class="form-page active">
+        <div class="question">1. What would I like to develop?</div>
+        <textarea placeholder="Your answer..."></textarea>
+        <div class="question">2. What is my responsibility?</div>
+        <textarea placeholder="Your answer..."></textarea>
+        <div class="question">3. What gives me energy?</div>
+        <textarea placeholder="Your answer..."></textarea>
+        <div class="question">4. How will I make a difference?</div>
+        <textarea placeholder="Your answer..."></textarea>
+        <div class="navigation">
+            <button onclick="nextPage()" class="next">Next</button>
+        </div>
+    </div>
+
+    <!-- Page 2 -->
+    <div id="page2" class="form-page">
+        <div class="question">What can I develop?</div>
+        <div class="question">1. Knowledge</div>
+        <textarea placeholder="Your answer..."></textarea>
+        <div class="question">2. Network</div>
+        <textarea placeholder="Your answer..."></textarea>
+        <div class="question">3. Talents</div>
+        <textarea placeholder="Your answer..."></textarea>
+        <div class="navigation">
+            <button onclick="previousPage()">Previous</button>
+            <button onclick="nextPage()" class="next">Next</button>
+        </div>
+    </div>
+
+    <!-- Page 3 -->
+    <div id="page3" class="form-page">
+        <div class="question">Make your goal SMART:</div>
+        <div class="question">1. Specific</div>
+        <textarea placeholder="Your answer..."></textarea>
+        <div class="question">2. Measurable</div>
+        <textarea placeholder="Your answer..."></textarea>
+        <div class="question">3. Acceptable</div>
+        <textarea placeholder="Your answer..."></textarea>
+        <div class="question">4. Realistic</div>
+        <textarea placeholder="Your answer..."></textarea>
+        <div class="question">5. Time</div>
+        <textarea placeholder="Your answer..."></textarea>
+        <div class="question" style="color: #FE4600;">My goal is:</div>
+        <textarea placeholder="Summarize your SMART goal..."></textarea>
+        <button onclick="addNewGoal()">Add Another SMART Goal</button>
+        <div class="navigation">
+            <button onclick="previousPage()">Previous</button>
+            <button onclick="nextPage()" class="next">Next</button>
+        </div>
+    </div>
+
+    <!-- Page 4 (Summary) -->
+    <div id="page4" class="form-page">
+        <div class="summary" id="summary"></div>
+        <div class="navigation">
+            <button onclick="previousPage()">Previous</button>
+            <button onclick="printSummary()" id="printBtn">Print to PDF</button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let goalCount = 1;  // Counter to track the number of SMART goals
+
+        function showPage(pageNumber) {
+            document.querySelectorAll('.form-page').forEach((page, index) => {
+                page.classList.toggle('active', index === pageNumber - 1);
+            });
+        }
+
+        function nextPage() {
+            const pages = document.querySelectorAll('.form-page');
+            if (currentPage < pages.length) {
+                currentPage++;
+                if (currentPage === pages.length) generateSummary();
+                showPage(currentPage);
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        }
+
+        function addNewGoal() {
+            goalCount++;
+            const newPage = document.createElement('div');
+            newPage.classList.add('form-page');
+            newPage.innerHTML = `
+                <div class="question">Make your goal SMART:</div>
+                <div class="question">1. Specific</div>
+                <textarea placeholder="Your answer..."></textarea>
+                <div class="question">2. Measurable</div>
+                <textarea placeholder="Your answer..."></textarea>
+                <div class="question">3. Acceptable</div>
+                <textarea placeholder="Your answer..."></textarea>
+                <div class="question">4. Realistic</div>
+                <textarea placeholder="Your answer..."></textarea>
+                <div class="question">5. Time</div>
+                <textarea placeholder="Your answer..."></textarea>
+                <div class="question" style="color: #FE4600;">My goal is:</div>
+                <textarea placeholder="Summarize your SMART goal..."></textarea>
+                <button onclick="addNewGoal()">Add Another SMART Goal</button>
+                <div class="navigation">
+                    <button onclick="previousPage()">Previous</button>
+                    <button class="next" onclick="nextPage()">Next</button>
+                </div>
+            `;
+            document.body.insertBefore(newPage, document.getElementById('page4'));
+
+            currentPage++;
+            showPage(currentPage);
+        }
+
+        function generateSummary() {
+            const allAnswers = document.querySelectorAll('textarea');
+            let summaryHtml = `
+                <h3>Summary of Your Personal Development Plan</h3>
+                <h4>What would you like to develop?</h4>
+                <p>${allAnswers[0].value}</p>
+                <h4>What is your responsibility?</h4>
+                <p>${allAnswers[1].value}</p>
+                <h4>What gives you energy?</h4>
+                <p>${allAnswers[2].value}</p>
+                <h4>How will you make a difference?</h4>
+                <p>${allAnswers[3].value}</p>
+                <h4>What can you develop?</h4>
+                <h5>Knowledge</h5>
+                <p>${allAnswers[4].value}</p>
+                <h5>Network</h5>
+                <p>${allAnswers[5].value}</p>
+                <h5>Talents</h5>
+                <p>${allAnswers[6].value}</p>
+                <h4>Making Your Goal SMART</h4>
+                <p><strong>Specific:</strong> ${allAnswers[7].value}</p>
+                <p><strong>Measurable:</strong> ${allAnswers[8].value}</p>
+                <p><strong>Acceptable:</strong> ${allAnswers[9].value}</p>
+                <p><strong>Realistic:</strong> ${allAnswers[10].value}</p>
+                <p><strong>Time:</strong> ${allAnswers[11].value}</p>
+                <p><strong style="color: #07A0C3;">My goal is:</strong> ${allAnswers[12].value}</p>
+                <hr>
+            `;
+
+            let goalIndex = 13; // Start index for additional SMART goals
+            let smartGoalNumber = 2; // Numbering for additional SMART goals
+
+            while (goalIndex < allAnswers.length) {
+                summaryHtml += `
+                    <h4>SMART Goal ${smartGoalNumber}</h4>
+                    <p><strong>Specific:</strong> ${allAnswers[goalIndex].value}</p>
+                    <p><strong>Measurable:</strong> ${allAnswers[goalIndex + 1].value}</p>
+                    <p><strong>Acceptable:</strong> ${allAnswers[goalIndex + 2].value}</p>
+                    <p><strong>Realistic:</strong> ${allAnswers[goalIndex + 3].value}</p>
+                    <p><strong>Time:</strong> ${allAnswers[goalIndex + 4].value}</p>
+                    <p><strong style="color: #07A0C3;">My goal is:</strong> ${allAnswers[goalIndex + 5].value}</p>
+                    <hr>
+                `;
+                goalIndex += 6;
+                smartGoalNumber++;
+            }
+
+            document.getElementById('summary').innerHTML = summaryHtml;
+        }
+
+        function printSummary() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
