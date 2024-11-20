@@ -79,7 +79,7 @@
         h4 {
             color: #FE4600;
         }
-        
+
         /* Fixed position box for the image */
         .image-container {
             position: fixed;
@@ -87,8 +87,6 @@
             right: 0;
             height: 100%;
             width: 400px; /* Fixed width for the image */
-            background: url('computer.jpeg') no-repeat center center;
-            background-size: cover;
             z-index: -1; /* Ensure the image stays behind the content */
         }
 
@@ -97,6 +95,15 @@
             .image-container, .logo {
                 display: none;
             }
+        }
+
+        /* Bottom left text */
+        .copyright {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 14px;
+            color: #001246;
         }
     </style>
 </head>
@@ -165,6 +172,11 @@
             <button onclick="previousPage()">Previous</button>
             <button onclick="printSummary()" id="printBtn">Print to PDF</button>
         </div>
+    </div>
+
+    <!-- Copyright Text -->
+    <div class="copyright">
+        &copy; Tim Vos
     </div>
 
     <script>
